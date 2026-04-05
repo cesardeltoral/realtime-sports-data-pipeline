@@ -15,17 +15,32 @@ No test runner is configured yet.
 
 ## Tech Stack
 
-- **Next.js 16.2** (App Router) with React 19 and TypeScript (strict mode)
-- **Tailwind CSS v4** via `@tailwindcss/postcss` plugin (no `tailwind.config` file — v4 uses CSS-based configuration in `app/globals.css`)
+- **Frontend**: Next.js 16.2 (App Router) with React 19 and TypeScript (strict mode)
+- **Styling**: Tailwind CSS v4 via `@tailwindcss/postcss` plugin (no `tailwind.config` file — v4 uses CSS-based config in `app/globals.css`)
+- **Producer**: Python with `statsbombpy` + `confluent-kafka`
+- **Consumer**: Node.js/TypeScript with `kafkajs`, Prisma (MySQL), Mongoose (MongoDB)
+- **API**: Node.js/TypeScript with GraphQL + WebSockets
+- **Broker**: Apache Kafka (topic: `ucl-live-feed`)
+- **Databases**: MySQL (relational metadata), MongoDB (event logs + coordinates)
+- **Infrastructure**: Docker Compose (Kafka, Zookeeper, MySQL, MongoDB)
 - Path alias: `@/*` maps to the project root
 
 ## Architecture
 
-This is a fresh `create-next-app` scaffold using the App Router (`app/` directory). There is no `pages/` router.
+Real-time sports data pipeline: StatsBomb → Kafka → polyglot databases → GraphQL/WebSocket delivery.
 
-- `app/layout.tsx` — root layout, loads Geist and Geist Mono fonts
-- `app/page.tsx` — home page (single route so far)
-- `app/globals.css` — global styles and Tailwind directives
+```
+app/                    ← Next.js frontend (UI only, consumes the API service)
+services/
+  producer/             ← Python: fetches StatsBomb UCL data, publishes to Kafka
+  consumer/             ← Node.js/TS: subscribes to Kafka, routes to MySQL + MongoDB
+  api/                  ← Node.js/TS: GraphQL (joins both DBs) + WebSockets (live feed)
+infra/                  ← Docker Compose for Kafka, MySQL, MongoDB
+```
+
+- The Next.js frontend is a **client** of `services/api/`, not the host of the API
+- The `services/api/` server is separate because it needs persistent WebSocket connections and independent scaling
+- Database routing: team/player/match metadata → MySQL (Prisma), play-by-play events with x/y coordinates → MongoDB (Mongoose)
 
 ## Important: Next.js 16 Breaking Changes
 
