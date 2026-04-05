@@ -180,7 +180,7 @@ export function isStartingXIEvent(event: StatsBombEvent): event is StartingXIEve
 
 // --- Metadata event types (routed to MySQL) ---
 
-const METADATA_EVENT_TYPES = new Set(["Starting XI", "Substitution", "Half Start", "Half End"]);
+export const METADATA_EVENT_TYPES = new Set(["Starting XI", "Substitution", "Half Start", "Half End"]);
 
 // --- Pitch event types (routed to MongoDB) ---
 

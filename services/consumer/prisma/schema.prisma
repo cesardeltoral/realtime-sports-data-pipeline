@@ -24,6 +24,7 @@ model Player {
   name      String   @db.VarChar(255)
   teamId    Int
   createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 
   team Team @relation(fields: [teamId], references: [id])
 

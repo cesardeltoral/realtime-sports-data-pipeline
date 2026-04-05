@@ -44,6 +44,12 @@ async function start(): Promise<void> {
         if (!value) return;
 
         const event: StatsBombEvent = JSON.parse(value);
+
+        if (!event.id || !event.type || !event.timestamp) {
+          console.warn(`[Consumer] Skipping malformed event at offset ${message.offset}:`, { id: event.id, type: event.type });
+          return;
+        }
+
         await processEvent(event);
 
         eventCount++;
@@ -63,7 +69,12 @@ async function start(): Promise<void> {
 }
 
 // Graceful shutdown
+let isShuttingDown = false;
+
 async function shutdown(): Promise<void> {
+  if (isShuttingDown) return;
+  isShuttingDown = true;
+
   console.log("\n[Consumer] Shutting down...");
   await consumer.disconnect();
   await disconnectMySQL();
@@ -72,8 +83,8 @@ async function shutdown(): Promise<void> {
   process.exit(0);
 }
 
-process.on("SIGINT", shutdown);
-process.on("SIGTERM", shutdown);
+process.once("SIGINT", shutdown);
+process.once("SIGTERM", shutdown);
 
 start().catch((err) => {
   console.error("[Consumer] Fatal error:", err);
