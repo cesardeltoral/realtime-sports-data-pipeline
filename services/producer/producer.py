@@ -9,7 +9,7 @@ import os
 import sys
 import time
 import math
-from datetime import datetime
+from datetime import datetime, timezone
 
 import orjson
 from dotenv import load_dotenv
@@ -85,7 +85,7 @@ def transform_event(raw: dict, match_meta: dict) -> dict:
     }
 
     # Add ingestion timestamp
-    cleaned["produced_at"] = datetime.utcnow().isoformat() + "Z"
+    cleaned["produced_at"] = datetime.now(timezone.utc).isoformat()
 
     return cleaned
 
