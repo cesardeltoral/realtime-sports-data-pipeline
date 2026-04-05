@@ -1,0 +1,51 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mysql"
+  url      = env("DATABASE_URL")
+}
+
+model Team {
+  id        Int      @id
+  name      String   @unique @db.VarChar(255)
+  createdAt DateTime @default(now())
+
+  homeMatches Match[] @relation("HomeTeam")
+  awayMatches Match[] @relation("AwayTeam")
+  players    Player[]
+
+  @@map("teams")
+}
+
+model Player {
+  id        Int      @id
+  name      String   @db.VarChar(255)
+  teamId    Int
+  createdAt DateTime @default(now())
+
+  team Team @relation(fields: [teamId], references: [id])
+
+  @@index([teamId])
+  @@map("players")
+}
+
+model Match {
+  id               Int      @id
+  matchDate        String   @db.VarChar(20)
+  competitionStage String   @db.VarChar(100)
+  stadium          String   @db.VarChar(255)
+  homeTeamId       Int
+  awayTeamId       Int
+  homeScore        Int
+  awayScore        Int
+  createdAt        DateTime @default(now())
+
+  homeTeam Team @relation("HomeTeam", fields: [homeTeamId], references: [id])
+  awayTeam Team @relation("AwayTeam", fields: [awayTeamId], references: [id])
+
+  @@index([homeTeamId])
+  @@index([awayTeamId])
+  @@map("matches")
+}
