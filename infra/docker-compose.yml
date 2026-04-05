@@ -43,7 +43,7 @@ services:
         kafka-topics --list --bootstrap-server kafka:29092
 
   kafka-ui:
-    image: provectuslabs/kafka-ui:latest
+    image: provectuslabs/kafka-ui:v0.7.2
     container_name: kafka-ui
     depends_on:
       - kafka
@@ -58,12 +58,12 @@ services:
     image: mysql:8.0
     container_name: mysql
     ports:
-      - "3306:3306"
+      - "127.0.0.1:3306:3306"
     environment:
-      MYSQL_ROOT_PASSWORD: rootpassword
-      MYSQL_DATABASE: ucl_pipeline
-      MYSQL_USER: pipeline_user
-      MYSQL_PASSWORD: pipeline_pass
+      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}
+      MYSQL_DATABASE: ${MYSQL_DATABASE}
+      MYSQL_USER: ${MYSQL_USER}
+      MYSQL_PASSWORD: ${MYSQL_PASSWORD}
     volumes:
       - mysql_data:/var/lib/mysql
 
@@ -71,11 +71,11 @@ services:
     image: mongo:7.0
     container_name: mongodb
     ports:
-      - "27017:27017"
+      - "127.0.0.1:27017:27017"
     environment:
-      MONGO_INITDB_ROOT_USERNAME: root
-      MONGO_INITDB_ROOT_PASSWORD: rootpassword
-      MONGO_INITDB_DATABASE: ucl_events
+      MONGO_INITDB_ROOT_USERNAME: ${MONGO_ROOT_USERNAME}
+      MONGO_INITDB_ROOT_PASSWORD: ${MONGO_ROOT_PASSWORD}
+      MONGO_INITDB_DATABASE: ${MONGO_DATABASE}
     volumes:
       - mongo_data:/data/db
 
