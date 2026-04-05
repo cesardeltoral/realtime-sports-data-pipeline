@@ -40,19 +40,19 @@ export default function ShotMap({ shots, homeTeam, awayTeam }: ShotMapProps) {
         <div className="flex gap-2 text-sm">
           <button
             onClick={() => setFilter("all")}
-            className={`rounded-md px-3 py-1 ${filter === "all" ? "bg-zinc-900 text-white dark:bg-white dark:text-black" : "bg-zinc-200 dark:bg-zinc-700"}`}
+            className={`rounded-md px-3 py-1 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-zinc-500 focus-visible:ring-offset-2 ${filter === "all" ? "bg-zinc-900 text-white dark:bg-white dark:text-black" : "bg-zinc-200 dark:bg-zinc-700"}`}
           >
             All
           </button>
           <button
             onClick={() => setFilter(homeTeam)}
-            className={`rounded-md px-3 py-1 ${filter === homeTeam ? "bg-zinc-900 text-white dark:bg-white dark:text-black" : "bg-zinc-200 dark:bg-zinc-700"}`}
+            className={`rounded-md px-3 py-1 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-zinc-500 focus-visible:ring-offset-2 ${filter === homeTeam ? "bg-zinc-900 text-white dark:bg-white dark:text-black" : "bg-zinc-200 dark:bg-zinc-700"}`}
           >
             {homeTeam}
           </button>
           <button
             onClick={() => setFilter(awayTeam)}
-            className={`rounded-md px-3 py-1 ${filter === awayTeam ? "bg-zinc-900 text-white dark:bg-white dark:text-black" : "bg-zinc-200 dark:bg-zinc-700"}`}
+            className={`rounded-md px-3 py-1 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-zinc-500 focus-visible:ring-offset-2 ${filter === awayTeam ? "bg-zinc-900 text-white dark:bg-white dark:text-black" : "bg-zinc-200 dark:bg-zinc-700"}`}
           >
             {awayTeam}
           </button>
@@ -86,7 +86,7 @@ export default function ShotMap({ shots, homeTeam, awayTeam }: ShotMapProps) {
 
             return (
               <circle
-                key={i}
+                key={`${shot.player}-${shot.minute}-${shot.location.x}-${shot.location.y}`}
                 cx={shot.location.x}
                 cy={shot.location.y}
                 r={radius}

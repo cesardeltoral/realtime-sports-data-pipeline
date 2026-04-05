@@ -8,6 +8,11 @@ export async function graphqlFetch<T>(query: string, variables?: Record<string, 
     cache: "no-store",
   });
 
+  if (!res.ok) {
+    const body = await res.text().catch(() => "");
+    throw new Error(`GraphQL request failed: ${res.status} ${res.statusText}${body ? ` — ${body}` : ""}`);
+  }
+
   const json = await res.json();
 
   if (json.errors) {

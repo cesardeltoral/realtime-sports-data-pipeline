@@ -5,36 +5,7 @@ import MatchHeader from "./MatchHeader";
 import MatchStats from "./MatchStats";
 import ShotMap from "./ShotMap";
 import LiveFeed from "./LiveFeed";
-
-interface Shot {
-  player: string;
-  team: string;
-  minute: number;
-  location: { x: number; y: number };
-  details: {
-    shot_outcome?: string;
-    shot_statsbomb_xg?: number;
-    shot_body_part?: string;
-  };
-}
-
-interface Match {
-  id: number;
-  matchDate: string;
-  competitionStage: string;
-  stadium: string;
-  homeTeam: { name: string };
-  awayTeam: { name: string };
-  homeScore: number;
-  awayScore: number;
-  stats: {
-    totalEvents: number;
-    shots: number;
-    passes: number;
-    fouls: number;
-    goals: number;
-  };
-}
+import type { Match, Shot } from "../types";
 
 interface DashboardProps {
   matches: Match[];
