@@ -11,7 +11,12 @@ import { resolvers } from "./resolvers.js";
 import { startWebSocketServer, stopWebSocketServer } from "./websocket.js";
 
 const PORT = parseInt(process.env.PORT ?? "4000", 10);
-const MONGODB_URI = process.env.MONGODB_URI ?? "mongodb://root:rootpassword@localhost:27017/ucl_events?authSource=admin";
+
+if (!process.env.MONGODB_URI) {
+  console.error("[API] MONGODB_URI environment variable is required");
+  process.exit(1);
+}
+const MONGODB_URI = process.env.MONGODB_URI;
 
 async function start(): Promise<void> {
   console.log("=".repeat(60));

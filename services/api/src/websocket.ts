@@ -33,19 +33,28 @@ export async function startWebSocketServer(server: Server): Promise<void> {
   });
 
   // Subscribe to Kafka and broadcast to WebSocket clients
-  await consumer.connect();
-  await consumer.subscribe({ topic: KAFKA_TOPIC, fromBeginning: false });
+  try {
+    await consumer.connect();
+    await consumer.subscribe({ topic: KAFKA_TOPIC, fromBeginning: false });
 
-  await consumer.run({
-    eachMessage: async ({ message }) => {
-      const value = message.value?.toString();
-      if (!value || wss.clients.size === 0) return;
+    await consumer.run({
+      eachMessage: async ({ message }) => {
+        try {
+          const value = message.value?.toString();
+          if (!value || wss.clients.size === 0) return;
 
-      broadcast(value);
-    },
-  });
+          broadcast(value);
+        } catch (err) {
+          console.error("[WebSocket] Error processing Kafka message:", err);
+        }
+      },
+    });
 
-  console.log(`[WebSocket] Live feed active on /ws (Kafka → clients)`);
+    console.log(`[WebSocket] Live feed active on /ws (Kafka → clients)`);
+  } catch (err) {
+    console.error("[WebSocket] Failed to connect to Kafka:", err);
+    console.warn("[WebSocket] Live feed unavailable — GraphQL still operational");
+  }
 }
 
 export async function stopWebSocketServer(): Promise<void> {
