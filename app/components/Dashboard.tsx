@@ -52,6 +52,7 @@ export default function Dashboard({ matches, shotsByMatch }: DashboardProps) {
 
       <div className="grid gap-6 lg:grid-cols-2">
         <ShotMap
+          key={match.id}
           shots={shots}
           homeTeam={match.homeTeam.name}
           awayTeam={match.awayTeam.name}
