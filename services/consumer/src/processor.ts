@@ -95,9 +95,19 @@ async function upsertMetadata(event: StatsBombEvent): Promise<void> {
     }
   }
 
-  // Upsert match once we know both team IDs
+  // Upsert match once we know both team IDs — ensure both teams exist first
   const teams = teamIdCache.get(meta.match_id);
   if (teams) {
+    await prisma.team.upsert({
+      where: { id: teams.homeTeamId },
+      update: {},
+      create: { id: teams.homeTeamId, name: meta.home_team },
+    });
+    await prisma.team.upsert({
+      where: { id: teams.awayTeamId },
+      update: {},
+      create: { id: teams.awayTeamId, name: meta.away_team },
+    });
     await prisma.match.upsert({
       where: { id: meta.match_id },
       update: {},
