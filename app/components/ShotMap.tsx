@@ -94,7 +94,8 @@ export default function ShotMap({ shots, homeTeam, awayTeam }: ShotMapProps) {
                 fillOpacity={0.8}
                 stroke="white"
                 strokeWidth={isGoal ? 0.4 : 0.2}
-                className="cursor-pointer transition-transform hover:scale-150"
+                style={{ transformBox: "fill-box", transformOrigin: "center" }}
+                className="cursor-pointer transition-all duration-150 hover:scale-150 hover:fill-opacity-100"
                 onMouseEnter={() => setActiveShot(shot)}
                 onMouseLeave={() => setActiveShot(null)}
               />
